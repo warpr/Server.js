@@ -18,6 +18,7 @@
     "hint": "./node_modules/jshint/bin/jshint bin/* lib test"
   },
   "dependencies": {
+    "concat-stream": "^1.4.7",
     "qejs": "^3.0.0",
     "n3": "^0.3.3",
     "jsonld": "^0.3.0",
