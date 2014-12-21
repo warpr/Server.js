@@ -61,6 +61,15 @@ and a [SPARQL endpoint](http://www.w3.org/TR/sparql11-protocol/) as sources:
 }
 ```
 
+The following sources are supported out of the box:
+- HDT files ([`HdtDatasource`](https://github.com/LinkedDataFragments/Server.js/blob/master/lib/datasources/HdtDatasource.js) with `file` setting)
+- N-Triples documents ([`TurtleDatasource`](https://github.com/LinkedDataFragments/Server.js/blob/master/lib/datasources/TurtleDatasource.js) with `url` setting)
+- Turtle documents ([`TurtleDatasource`](https://github.com/LinkedDataFragments/Server.js/blob/master/lib/datasources/TurtleDatasource.js) with `url` setting)
+- JSON-LD documents ([`JsonLdDatasource`](https://github.com/LinkedDataFragments/Server.js/blob/master/lib/datasources/JsonLdDatasource.js) with `url` setting)
+- SPARQL endpoints ([`SparqlDatasource`](https://github.com/LinkedDataFragments/Server.js/blob/master/lib/datasources/SparqlDatasource.js) with `endpoint` and optionally `defaultGraph` settings)
+
+Support for new sources is possible by implementing the [`Datasource`](https://github.com/LinkedDataFragments/Server.js/blob/master/lib/datasources/Datasource.js) interface.
+
 ### Start the server
 
 After creating a configuration file, execute
@@ -72,9 +81,33 @@ and `4` the number of worker processes.
 
 Now visit `http://localhost:5000/` in your browser.
 
+### Reload running server
+
+You can reload the server without any downtime
+in order to load a new configuration or version.
+<br>
+In order to do this, you need the process ID of the server master process.
+<br>
+One possibility to obtain this are the server logs:
+```bash
+$ bin/ldf-server config.json
+Master 28106 running.
+Worker 28107 running on http://localhost:3000/.
+```
+
+If you send the server a `SIGHUP` signal:
+```bash
+$ kill -s SIGHUP 28106
+```
+it will reload by replacing its workers.
+
+Note that crashed or killed workers are always replaced automatically.
+
 ### _(Optional)_ Set up a reverse proxy
 
-A Linked Data Fragments server would typically run behind an HTTP reverse proxy server.
+A typical Linked Data Fragments server will be exposed
+on a public domain or subdomain along with other applications.
+Therefore, you need to configure the server to run behind an HTTP reverse proxy.
 <br>
 To set this up, configure the server's public URL in your server's `config.json`:
 ```json
